@@ -4,8 +4,7 @@ import Popup from './components/Popup';
 import { COLORS } from './const';
 import './App.css';
 
-//const url = 'https://hq.asodesk.com/api/us/demo/keyword-analytics/data-stats';
-const url = 'http://localhost:3005/keyword-analytics/data-stats';
+const url = 'https://hq.asodesk.com/api/us/demo/keyword-analytics/data-stats';
 
 function App() {
   const [data, setData] = useState([]);
@@ -88,7 +87,7 @@ function App() {
 
   useEffect(() => {
     async function fetchData() {
-      const data = await fetch(url);
+      const data = await fetch(url, {method: 'POST'});
       const result = await data.json();
 
       setData(result.data);
