@@ -21,10 +21,11 @@ function App() {
         Header: 'Total Apps',
         accessor: 'total_apps',
       },
-/*       {
-        Header: 'Rank',
-        accessor: 'position_info',
-      }, */
+    
+      /*       {
+              Header: 'Rank',
+              accessor: 'position_info',
+            }, */
     ],
     [],
   );
