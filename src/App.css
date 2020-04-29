@@ -1,10 +1,27 @@
 .container{
   width: 80%;
-  margin: auto;
+  margin: 20px auto;
   
   display: flex;
   justify-content: center;
   flex-direction: column;
+}
+
+.header-cell{
+  padding: 10px;
+  border: 1px solid gray;
+  background: darkgrey;
+}
+
+.table-cell{
+  padding: 10px;
+  border: 1px solid gray;
+  background: lightgray;
+  text-align: center;
+}
+
+.popup-btn{
+  width: 80px;
 }
 
 .popup {
@@ -26,4 +43,15 @@
   bottom: 25%;
   margin: auto;
   background: white;
+}
+
+.change-prop-increase{
+  color: green;
+}
+
+.change-prop-decrease{
+  color:red;
+}
+.pagination{
+  margin-top: 20px;
 }

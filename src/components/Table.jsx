@@ -3,11 +3,7 @@ import { useTable, useRowSelect, usePagination } from 'react-table';
 
 import Checkbox from '../components/Checkbox';
 
-function Table({ data, columns, showPopup }) {
-  const onExploreClick = (keyword) => () => {
-    window.open("https://google.com");
-  }
-
+function Table({ data, columns }) {
   const {
     getTableProps,
     getTableBodyProps,
@@ -51,20 +47,6 @@ function Table({ data, columns, showPopup }) {
             </div>
           )
         },
-        {
-          id: 'explore',
-          Cell: ({ row }) => {
-            const { keyword } = row;
-            return <button onClick={onExploreClick(keyword)}>explore</button>
-          },
-        },
-        {
-          id: 'popup',
-          Cell: ({ row }) => {
-            const { keyword } = row;
-            return <button onClick={showPopup}>Show popup</button>
-          },
-        },
         ...columns,
       ]);
     }
@@ -77,7 +59,7 @@ function Table({ data, columns, showPopup }) {
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map(column => (
-                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+                <th className='header-cell' {...column.getHeaderProps()}>{column.render('Header')}</th>
               ))}
             </tr>
           ))}
@@ -89,12 +71,8 @@ function Table({ data, columns, showPopup }) {
               <tr {...row.getRowProps()}>
                 {row.cells.map(cell => {
                   return <td
-                    {...cell.getCellProps()}
-                    style={{
-                      padding: '10px',
-                      border: 'solid 1px gray',
-                      background: 'lightgray',
-                    }}>
+                    className='table-cell'
+                    {...cell.getCellProps()}>
                     {cell.render('Cell')}
                   </td>
                 })}

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import Table from './components/Table';
-import Popup from './components/PopUp';
+import Popup from './components/Popup';
+import { COLORS } from './const';
 import './App.css';
 
 //const url = 'https://hq.asodesk.com/api/us/demo/keyword-analytics/data-stats';
@@ -10,19 +11,39 @@ function App() {
   const [data, setData] = useState([]);
   const [showPopUp, setshowPopUp] = useState(false);
 
-  const onClose = () => {
-    setshowPopUp(false);
-  }
+  const onClose = (e) => {
+    if (e.target.className !== "popup_inner") {
+      setshowPopUp(false);
+    }
+  };
 
   const onShowPopup = () => {
     setshowPopUp(true);
-  }
+  };
+
+  const onExploreClick = (keyword) => () => {
+    window.open("https://google.com");
+  };
 
   const columns = useMemo(
     () => [
       {
         Header: 'Keyword',
         accessor: 'keyword',
+      },
+      {
+        id: 'explore',
+        Cell: ({ row }) => {
+          const keyword = row && row.original && row.original.keyword;
+          return <button onClick={onExploreClick(keyword)}>explore</button>
+        },
+      },
+      {
+        id: 'popup',
+        Cell: ({ row }) => {
+          const count = row && row.original && row.original.suggestions_count;
+          return <button className='popup-btn' onClick={onShowPopup}>Show({Number(count)})</button>
+        },
       },
       {
         Header: 'Traffic Score',
@@ -32,10 +53,35 @@ function App() {
         Header: 'Total Apps',
         accessor: 'total_apps',
       },
-      /*       {
-              Header: 'Rank',
-              accessor: 'position_info',
-            }, */
+      {
+        id: 'rank',
+        Header: 'Rank',
+        Cell: ({ row }) => {
+          const { change, position } = row && row.original && row.original.position_info;
+          const className = change && change > 0 ? 'change-prop-increase' : 'change-prop-decrease';
+          const showChage = !!change != 0;
+          return (
+            <div>
+              {position}
+              {showChage &&
+                <span className={className}>
+                  ({change})
+                 </span>}
+            </div>
+          )
+        },
+      },
+      {
+        id: 'color',
+        Cell: ({ row }) => {
+          const color = row && row.original && row.original.color;
+          return <div style={{
+            background: COLORS[color],
+            width: '100%',
+            height: '20px',
+          }}></div>
+        },
+      },
     ],
     [],
   );
@@ -45,7 +91,6 @@ function App() {
       const data = await fetch(url);
       const result = await data.json();
 
-    
       setData(result.data);
     }
 
