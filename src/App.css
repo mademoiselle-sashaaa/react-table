@@ -55,3 +55,7 @@
 .pagination{
   margin-top: 20px;
 }
+.pagination select{
+  display: inline-block;
+  margin-top: 20px;
+}
