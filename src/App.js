@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import Table from './components/Table';
+import './App.css';
 
 //const url = 'https://hq.asodesk.com/api/us/demo/keyword-analytics/data-stats';
 const url = 'http://localhost:3005/keyword-analytics/data-stats';
