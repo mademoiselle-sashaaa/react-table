@@ -3,7 +3,7 @@ import { useTable, useRowSelect, usePagination } from 'react-table';
 
 import Checkbox from '../components/Checkbox';
 
-function Table({ data, columns }) {
+function Table({ data, columns, showPopup }) {
   const onExploreClick = (keyword) => () => {
     window.open("https://google.com");
   }
@@ -58,6 +58,13 @@ function Table({ data, columns }) {
             return <button onClick={onExploreClick(keyword)}>explore</button>
           },
         },
+        {
+          id: 'popup',
+          Cell: ({ row }) => {
+            const { keyword } = row;
+            return <button onClick={showPopup}>Show popup</button>
+          },
+        },
         ...columns,
       ]);
     }
@@ -97,7 +104,7 @@ function Table({ data, columns }) {
         </tbody>
       </table>
 
-      <div className="pagination">
+      <div className='pagination'>
         <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
           {'<<'}
         </button>{' '}
@@ -119,7 +126,7 @@ function Table({ data, columns }) {
         <span>
           | Go to page:{' '}
           <input
-            type="number"
+            type='number'
             defaultValue={pageIndex + 1}
             onChange={e => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0
