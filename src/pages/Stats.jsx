@@ -26,15 +26,15 @@ function Stats() {
   }, [data]);
 
   const toggleAllSelected = useCallback(() => {
-    setData(data.map(item => ({ ...item, selected: !selectAllRows })));
+    setData(data.map((item, i) => (i === 0 ? { ...item, selected: true } : { ...item, selected: !selectAllRows })));
     setselectAllRows(!selectAllRows);
   }, [data, selectAllRows]);
 
   const toggleRow = useCallback((id) => () => {
-    if (selected.length!==data.length){
+    if (selected.length !== data.length) {
       setselectAllRows(false);
     }
-    
+
     const item = data.find(item => item.id === id);
     const index = data.indexOf(item);
     const modifiedItem = { ...item, selected: !item.selected };
@@ -134,8 +134,9 @@ function Stats() {
       const data = await fetch(url);
       const result = await data.json();
 
-      const extendedData = result.data.map(item => ({ ...item, selected: false }))
+      const extendedData = result.data.map((item, i) => (i === 0 ? { ...item, selected: true } : { ...item, selected: false }));
       setData(extendedData);
+      setSelected([extendedData[0]]);
     }
     fetchData();
   }, []);
