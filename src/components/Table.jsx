@@ -21,7 +21,7 @@ function Table({ data, columns }) {
     {
       columns,
       data,
-      initialState: { pageIndex: 0 },
+      initialState: { pageIndex: 0 }
     },
     usePagination,
   );

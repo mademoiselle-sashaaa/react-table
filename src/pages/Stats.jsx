@@ -9,7 +9,6 @@ function Stats() {
   const [data, setData] = useState([]);
   const [showPopUp, setshowPopUp] = useState(false);
   const [selectAllRows, setselectAllRows] = useState(false);
-  const [selected, setSelected] = useState([]);
 
   const onClose = (e) => {
     if (e.target.className !== "popup_inner") {
@@ -31,20 +30,28 @@ function Stats() {
   }, [data, selectAllRows]);
 
   const toggleRow = useCallback((id) => () => {
-    if (selected.length !== data.length) {
-      setselectAllRows(false);
+    const item = data.find(item => item.id === id);
+
+    const selectedCount = data.reduce((acc, item) => { return item.selected ? acc + 1 : acc }, 0);
+    if (selectedCount === data.length-1 && !item.selected) {
+      setselectAllRows(true);
+    } else { setselectAllRows(false); }
+
+    if (selectedCount === 1 && item.selected) {
+      const array = [...data];
+      setData(array);
+      return;
     }
 
-    const item = data.find(item => item.id === id);
     const index = data.indexOf(item);
+
     const modifiedItem = { ...item, selected: !item.selected };
 
     const array = [...data];
     array[index] = modifiedItem;
 
-    setSelected([...selected, item]);
     setData(array);
-  }, [selected, data]);
+  }, [data]);
 
   const columns = useMemo(
     () => [
@@ -136,7 +143,6 @@ function Stats() {
 
       const extendedData = result.data.map((item, i) => (i === 0 ? { ...item, selected: true } : { ...item, selected: false }));
       setData(extendedData);
-      setSelected([extendedData[0]]);
     }
     fetchData();
   }, []);
