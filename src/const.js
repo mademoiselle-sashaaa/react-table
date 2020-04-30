@@ -1,4 +1,4 @@
-// proxy to overcome CORS 
+//proxy to overcome CORS issues
 export const url = 'https://sleepy-tor-76977.herokuapp.com/keyword-analytics/data-stats';
 
 export const COLORS = {

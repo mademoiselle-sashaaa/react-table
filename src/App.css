@@ -45,6 +45,11 @@
   background: white;
 }
 
+.explore-link{
+  text-decoration: none;
+  color: black;
+}
+
 .change-prop-increase{
   color: green;
 }
@@ -56,6 +61,6 @@
   margin-top: 20px;
 }
 .pagination select{
-  display: inline-block;
+  display: block;
   margin-top: 20px;
 }
