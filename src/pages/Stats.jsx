@@ -8,6 +8,8 @@ import { Link } from 'react-router-dom';
 function Stats() {
   const [data, setData] = useState([]);
   const [showPopUp, setshowPopUp] = useState(false);
+  const [selectAllRows, setselectAllRows] = useState(false);
+  const [selected, setSelected] = useState([]);
 
   const onClose = (e) => {
     if (e.target.className !== "popup_inner") {
@@ -23,8 +25,40 @@ function Stats() {
     setData(data.filter(item => item.id !== id));
   }, [data]);
 
+  const toggleAllSelected = useCallback(() => {
+    setData(data.map(item => ({ ...item, selected: !selectAllRows })));
+    setselectAllRows(!selectAllRows);
+  }, [data, selectAllRows]);
+
+  const toggleRow = useCallback((id) => () => {
+    if (selected.length!==data.length){
+      setselectAllRows(false);
+    }
+    
+    const item = data.find(item => item.id === id);
+    const index = data.indexOf(item);
+    const modifiedItem = { ...item, selected: !item.selected };
+
+    const array = [...data];
+    array[index] = modifiedItem;
+
+    setSelected([...selected, item]);
+    setData(array);
+  }, [selected, data]);
+
   const columns = useMemo(
     () => [
+      {
+        id: 'select',
+        Header: () => (<input onChange={toggleAllSelected} type="checkbox" checked={selectAllRows} />),
+        Cell: ({ row }) => {
+          const selected = row && row.original && row.original.selected;
+          const id = row && row.original && row.original.id;
+          return (
+            <input type="checkbox" onChange={toggleRow(id)} defaultChecked={selected} />
+          );
+        },
+      },
       {
         Header: 'Keyword',
         accessor: 'keyword',
@@ -74,24 +108,25 @@ function Stats() {
       },
       {
         id: 'color',
+        Header: 'Color',
         Cell: ({ row }) => {
           const color = row && row.original && row.original.color;
-          return <div style={{
-            background: COLORS[color],
-            width: '100%',
-            height: '20px',
-          }}></div>
+          return <div style={{ background: COLORS[color], width: '100%', height: '20px' }}></div>
         },
       },
       {
         id: 'delete',
         Cell: ({ row }) => {
           const id = row && row.original && row.original.id;
-          return <div onClick={deleteRow(id)}>x</div>
+          return (
+            <div onClick={deleteRow(id)}>
+              <strong>x</strong>
+            </div>
+          );
         },
       },
     ],
-    [deleteRow],
+    [deleteRow, selectAllRows, toggleAllSelected, toggleRow],
   );
 
   useEffect(() => {
@@ -99,9 +134,9 @@ function Stats() {
       const data = await fetch(url);
       const result = await data.json();
 
-      setData(result.data);
+      const extendedData = result.data.map(item => ({ ...item, selected: false }))
+      setData(extendedData);
     }
-
     fetchData();
   }, []);
 

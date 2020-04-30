@@ -1,7 +1,5 @@
 import React from 'react';
-import { useTable, useRowSelect, usePagination } from 'react-table';
-
-import Checkbox from '../components/Checkbox';
+import { useTable, usePagination } from 'react-table';
 
 function Table({ data, columns }) {
   const {
@@ -23,28 +21,9 @@ function Table({ data, columns }) {
     {
       columns,
       data,
-      initialState: { pageIndex: 1 },
+      initialState: { pageIndex: 0 },
     },
-    useRowSelect,
     usePagination,
-    hooks => {
-      hooks.visibleColumns.push(columns => [
-        {
-          id: 'selection',
-          Header: ({ getToggleAllRowsSelectedProps }) => (
-            <div>
-              <Checkbox {...getToggleAllRowsSelectedProps()} />
-            </div>
-          ),
-          Cell: ({ row }) => (
-            <div>
-              <Checkbox {...row.getToggleRowSelectedProps()} />
-            </div>
-          )
-        },
-        ...columns,
-      ]);
-    }
   );
 
   return (
