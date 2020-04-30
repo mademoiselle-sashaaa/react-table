@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
+
 import Table from './components/Table';
 import Popup from './components/Popup';
-import { COLORS } from './const';
+import { url, COLORS } from './const';
 import './App.css';
-
-const url = 'https://hq.asodesk.com/api/us/demo/keyword-analytics/data-stats';
 
 function App() {
   const [data, setData] = useState([]);
@@ -41,7 +40,7 @@ function App() {
         id: 'popup',
         Cell: ({ row }) => {
           const count = row && row.original && row.original.suggestions_count;
-          return <button className='popup-btn' onClick={onShowPopup}>Show({Number(count)})</button>
+          return <button className='popup-btn' onClick={onShowPopup}>Show {Number(count) ? (Number(count)) : null}</button>
         },
       },
       {
@@ -57,8 +56,8 @@ function App() {
         Header: 'Rank',
         Cell: ({ row }) => {
           const { change, position } = row && row.original && row.original.position_info;
-          const className = change && change > 0 ? 'change-prop-increase' : 'change-prop-decrease';
-          const showChage = !!change != 0;
+          const className = change > 0 ? 'change-prop-increase' : 'change-prop-decrease';
+          const showChage = Number(change) !== 0;
           return (
             <div>
               {position}
@@ -87,7 +86,7 @@ function App() {
 
   useEffect(() => {
     async function fetchData() {
-      const data = await fetch(url, {method: 'POST'});
+      const data = await fetch(url);
       const result = await data.json();
 
       setData(result.data);

@@ -9,7 +9,6 @@ function Table({ data, columns }) {
     getTableBodyProps,
     headerGroups,
     prepareRow,
-    selectedFlatRows,
     page,
     canPreviousPage,
     canNextPage,
@@ -19,7 +18,7 @@ function Table({ data, columns }) {
     nextPage,
     previousPage,
     setPageSize,
-    state: { selectedRowIds, pageIndex, pageSize },
+    state: { pageIndex, pageSize },
   } = useTable(
     {
       columns,
