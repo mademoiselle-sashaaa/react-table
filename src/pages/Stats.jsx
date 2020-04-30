@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 
 import Table from '../components/Table';
 import Popup from '../components/Popup';
@@ -19,6 +19,10 @@ function Stats() {
     setshowPopUp(true);
   };
 
+  const deleteRow = useCallback((id) => () => {
+    setData(data.filter(item => item.id !== id));
+  }, [data]);
+
   const columns = useMemo(
     () => [
       {
@@ -31,7 +35,7 @@ function Stats() {
           const keyword = row && row.original && row.original.keyword;
           return (
             <button>
-              <Link  className='explore-link' to={`/explore?q=${keyword}`}>explore</Link>
+              <Link className='explore-link' to={`/explore?q=${keyword}`}>explore</Link>
             </button>)
         },
       },
@@ -79,8 +83,15 @@ function Stats() {
           }}></div>
         },
       },
+      {
+        id: 'delete',
+        Cell: ({ row }) => {
+          const id = row && row.original && row.original.id;
+          return <div onClick={deleteRow(id)}>x</div>
+        },
+      },
     ],
-    [],
+    [deleteRow],
   );
 
   useEffect(() => {
