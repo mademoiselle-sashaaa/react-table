@@ -1,6 +1,6 @@
 import React from 'react';
 
-interface PopupProps {
+type PopupProps = {
     onClose: (e: React.MouseEvent<HTMLElement>) => void
 }
 

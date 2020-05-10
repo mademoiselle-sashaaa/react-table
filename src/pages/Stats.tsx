@@ -153,7 +153,7 @@ const Stats: React.FC = () => {
 
   return (
     <div className="App">
-      <Table data={data} columns={columns} />
+     <Table data={data} columns={columns} />
       {showPopUp && <Popup onClose={onClose} />}
     </div>
   );
