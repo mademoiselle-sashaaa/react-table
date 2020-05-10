@@ -6,7 +6,7 @@ import Blank from './pages/Blank';
 
 import './App.css';
 
-function App() {
+const App: React.FC = () => {
   return (
     <Switch>
       <Route path='/stats' component={Stats} />

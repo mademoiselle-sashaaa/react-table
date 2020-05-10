@@ -1,17 +1,21 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 
 import Table from '../components/Table';
 import Popup from '../components/Popup';
 import { url, COLORS } from '../const';
-import { Link } from 'react-router-dom';
+import { mapData } from '../helpers';
+import { ItemProps } from '../types';
+import { Cell } from 'react-table';
 
-function Stats() {
-  const [data, setData] = useState([]);
+
+const Stats: React.FC = () => {
+  const [data, setData] = useState<ItemProps[]>([]);
   const [showPopUp, setshowPopUp] = useState(false);
   const [selectAllRows, setselectAllRows] = useState(false);
 
-  const onClose = (e) => {
-    if (e.target.className !== "popup_inner") {
+  const onClose = (e: React.MouseEvent<HTMLElement>) => {
+    if ((e.target as HTMLElement).className !== "popup_inner") {
       setshowPopUp(false);
     }
   };
@@ -20,7 +24,7 @@ function Stats() {
     setshowPopUp(true);
   };
 
-  const deleteRow = useCallback((id) => () => {
+  const deleteRow = useCallback((id: number) => () => {
     setData(data.filter(item => item.id !== id));
   }, [data]);
 
@@ -29,23 +33,23 @@ function Stats() {
     setselectAllRows(!selectAllRows);
   }, [data, selectAllRows]);
 
-  const toggleRow = useCallback((id) => () => {
+  const toggleRow = useCallback((id: number) => () => {
     const item = data.find(item => item.id === id);
 
     const selectedCount = data.reduce((acc, item) => { return item.selected ? acc + 1 : acc }, 0);
-    if (selectedCount === data.length-1 && !item.selected) {
+    if (selectedCount === data.length - 1 && !item!.selected) {
       setselectAllRows(true);
     } else { setselectAllRows(false); }
 
-    if (selectedCount === 1 && item.selected) {
+    if (selectedCount === 1 && item!.selected) {
       const array = [...data];
       setData(array);
       return;
     }
 
-    const index = data.indexOf(item);
+    const index = data.indexOf(item!);
 
-    const modifiedItem = { ...item, selected: !item.selected };
+    const modifiedItem = { ...item!, selected: !item!.selected };
 
     const array = [...data];
     array[index] = modifiedItem;
@@ -58,7 +62,7 @@ function Stats() {
       {
         id: 'select',
         Header: () => (<input onChange={toggleAllSelected} type="checkbox" checked={selectAllRows} />),
-        Cell: ({ row }) => {
+        Cell: ({ row }: Cell<ItemProps>) => {
           const selected = row && row.original && row.original.selected;
           const id = row && row.original && row.original.id;
           return (
@@ -72,7 +76,7 @@ function Stats() {
       },
       {
         id: 'explore',
-        Cell: ({ row }) => {
+        Cell: ({ row }: Cell<ItemProps>) => {
           const keyword = row && row.original && row.original.keyword;
           return (
             <button>
@@ -82,25 +86,25 @@ function Stats() {
       },
       {
         id: 'popup',
-        Cell: ({ row }) => {
-          const count = row && row.original && row.original.suggestions_count;
+        Cell: ({ row }: Cell<ItemProps>) => {
+          const count = row && row.original && row.original.suggestionsCount;
           return <button className='popup-btn' onClick={onShowPopup}>Show {Number(count) ? (Number(count)) : null}</button>
         },
       },
       {
         Header: 'Traffic Score',
-        accessor: 'users_per_day',
+        accessor: 'usersPerDay',
       },
       {
         Header: 'Total Apps',
-        accessor: 'total_apps',
+        accessor: 'totalApps',
       },
       {
         id: 'rank',
         Header: 'Rank',
-        Cell: ({ row }) => {
-          const { change, position } = row && row.original && row.original.position_info;
-          const className = change > 0 ? 'change-prop-increase' : 'change-prop-decrease';
+        Cell: ({ row }: Cell<ItemProps>) => {
+          const { change, position } = row && row.original && row.original.positionInfo;
+          const className = change && change > 0 ? 'change-prop-increase' : 'change-prop-decrease';
           const showChage = Number(change) !== 0;
           return (
             <div>
@@ -108,7 +112,7 @@ function Stats() {
               {showChage &&
                 <span className={className}>
                   ({change})
-                 </span>}
+               </span>}
             </div>
           )
         },
@@ -116,14 +120,14 @@ function Stats() {
       {
         id: 'color',
         Header: 'Color',
-        Cell: ({ row }) => {
+        Cell: ({ row }: Cell<ItemProps>) => {
           const color = row && row.original && row.original.color;
           return <div style={{ background: COLORS[color], width: '100%', height: '20px' }}></div>
         },
       },
       {
         id: 'delete',
-        Cell: ({ row }) => {
+        Cell: ({ row }: Cell<ItemProps>) => {
           const id = row && row.original && row.original.id;
           return (
             <div onClick={deleteRow(id)}>
@@ -138,18 +142,18 @@ function Stats() {
 
   useEffect(() => {
     async function fetchData() {
-      const data = await fetch(url);
-      const result = await data.json();
+      const response = await fetch(url);
+      const result = await response.json();
+      const data = mapData(result.data);
 
-      const extendedData = result.data.map((item, i) => (i === 0 ? { ...item, selected: true } : { ...item, selected: false }));
-      setData(extendedData);
+      setData(data);
     }
     fetchData();
   }, []);
 
   return (
     <div className="App">
-      <Table data={data} columns={columns} showPopup={onShowPopup} />
+      <Table data={data} columns={columns} />
       {showPopUp && <Popup onClose={onClose} />}
     </div>
   );
