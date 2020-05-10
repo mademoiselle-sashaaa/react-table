@@ -1,6 +1,10 @@
 import React from 'react';
 
-function Popup({ onClose }) {
+interface PopupProps {
+    onClose: (e: React.MouseEvent<HTMLElement>) => void
+}
+
+const Popup: React.FC<PopupProps> = ({ onClose }) => {
     return (
         <div className='popup' onClick={onClose}>
             <div className='popup_inner'>

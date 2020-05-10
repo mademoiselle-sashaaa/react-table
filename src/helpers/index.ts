@@ -1,5 +1,5 @@
-export const mapData = (data) => {
-    return data.map((item, i) => {
+export const mapData = (data: any) => {
+    return data.map((item: any, i: number) => {
         let mappedItem = {
             id: item.id,
             keyword: item.keyword,
