@@ -1,8 +1,22 @@
 import React from 'react';
 import { useTable, usePagination } from 'react-table';
+import { ItemProps } from '../types/item';
 
+type TableDataProps = {
+  data: ItemProps[],
+  columns: any;
+}
 
-const Table = ({ data, columns }) => {
+const Table: React.FC<TableDataProps> = ({ data, columns }) => {
+  const instance = useTable(
+    {
+      columns,
+      data,
+      initialState: { pageIndex: 0 }
+    },
+    usePagination
+  );
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -18,14 +32,7 @@ const Table = ({ data, columns }) => {
     previousPage,
     setPageSize,
     state: { pageIndex, pageSize },
-  } = useTable(
-    {
-      columns,
-      data,
-      initialState: {  pageIndex: 0 }
-    },
-    usePagination,
-  );
+  } = instance;
 
   return (
     <div className="container">

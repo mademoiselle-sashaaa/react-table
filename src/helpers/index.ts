@@ -7,7 +7,7 @@ export const mapData = (data: any) => {
             positionInfo: item.position_info,
             totalApps: item.total_apps,
             usersPerDay: item.users_per_day,
-            suggestionsCount: item.suggestions_count,
+            suggestionCount: item.suggestions_count,
             selected: i === 0
         };
 

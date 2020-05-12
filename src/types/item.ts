@@ -11,5 +11,5 @@ export interface ItemProps {
     totalApps: number;
     usersPerDay: number;
     selected: boolean;
-    suggestionsCount: number;
+    suggestionCount: any;
 }

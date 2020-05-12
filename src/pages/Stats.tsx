@@ -1,17 +1,18 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-
-import Table from '../components/Table';
-import Popup from '../components/Popup';
-import { url, COLORS } from '../const';
-import { mapData } from '../helpers';
-import { ItemProps } from '../types';
 import { Cell } from 'react-table';
 
+import Popup from '../components/Popup';
+import Table from '../components/Table';
+import Spinner from '../components/Spinner';
+import { url, COLORS } from '../const';
+import { mapData } from '../helpers';
+import { ItemProps } from '../types/item';
 
 const Stats: React.FC = () => {
   const [data, setData] = useState<ItemProps[]>([]);
   const [showPopUp, setshowPopUp] = useState(false);
+  const [showSpinner, setshowSpinner] = useState(false);
   const [selectAllRows, setselectAllRows] = useState(false);
 
   const onClose = (e: React.MouseEvent<HTMLElement>) => {
@@ -87,7 +88,7 @@ const Stats: React.FC = () => {
       {
         id: 'popup',
         Cell: ({ row }: Cell<ItemProps>) => {
-          const count = row && row.original && row.original.suggestionsCount;
+          const count = row && row.original && row.original.suggestionCount;
           return <button className='popup-btn' onClick={onShowPopup}>Show {Number(count) ? (Number(count)) : null}</button>
         },
       },
@@ -142,19 +143,22 @@ const Stats: React.FC = () => {
 
   useEffect(() => {
     async function fetchData() {
+      setshowSpinner(true);
       const response = await fetch(url);
       const result = await response.json();
       const data = mapData(result.data);
 
       setData(data);
+      setshowSpinner(false);
     }
     fetchData();
   }, []);
 
   return (
     <div className="App">
-     <Table data={data} columns={columns} />
+      <Table data={data} columns={columns} />
       {showPopUp && <Popup onClose={onClose} />}
+      {showSpinner && <Spinner />}
     </div>
   );
 }
